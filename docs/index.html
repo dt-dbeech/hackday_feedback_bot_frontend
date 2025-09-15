@@ -403,6 +403,22 @@
             display: none;
         }
 
+        .mobile-experiment-notice {
+            font-size: 0.8rem;
+            color: #ffffff;
+            text-align: center;
+            margin-top: 1rem;
+            padding: 0.875rem 1rem;
+            background: rgba(12, 18, 32, 0.7);
+            border: 1px solid rgba(0, 212, 170, 0.3);
+            border-radius: var(--border-radius-small);
+            backdrop-filter: blur(15px);
+            transition: var(--transition);
+            position: relative;
+            font-weight: 500;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+        }
+
         /* Mobile optimizations */
         @media (max-width: 768px) {
             .app-container {
@@ -419,9 +435,15 @@
             }
             
             .warning-text {
-                font-size: 0.8rem;
-                padding: 0.875rem 1rem;
-                margin-bottom: 1.5rem;
+                display: none; /* Hide original warning text on mobile */
+            }
+            
+            .off-script-text {
+                display: none; /* Hide the off-script text on mobile */
+            }
+            
+            .mobile-experiment-notice {
+                display: block; /* Show mobile experiment notice */
             }
             
             .step-progress {
@@ -470,9 +492,17 @@
             }
             
             .warning-text {
+                display: none; /* Hide original warning text on small mobile */
+            }
+            
+            .off-script-text {
+                display: none; /* Hide the off-script text on small mobile */
+            }
+            
+            .mobile-experiment-notice {
+                display: block; /* Show mobile experiment notice */
                 font-size: 0.75rem;
                 padding: 0.75rem;
-                margin-bottom: 1.25rem;
             }
             
             .step-progress {
@@ -548,7 +578,7 @@
                             <p>Thank you for joining Hack Day!</p>
                             <p>Tell us what you enjoyed, didn't like, any highlights, challenges, or suggestions.</p>
                             <p>We'd especially like to know if you found it valuable as a learning experience or if you picked up any new skills.</p>
-                            <p>I might ask a few follow-up questions, but feel free to go off-script or skip anything you like!</p>
+                            <p class="off-script-text">I might ask a few follow-up questions, but feel free to go off-script or skip anything you like!</p>
                             <p>So how was hackday for you?</p>
                         </div>
                     </div>
@@ -564,6 +594,10 @@
                             <i class="fas fa-paper-plane" style="margin-right: 0.5rem;"></i>
                             Send
                         </button>
+                        <div class="mobile-experiment-notice" style="display: none;">
+                            <i class="fas fa-shield-alt" style="margin-right: 0.5rem;"></i>
+                            This is an experimental tool.<br>Please do not enter any sensitive data.
+                        </div>
                         <div class="step-progress" id="stepProgress">
                             <div class="step active" data-step="1"></div>
                             <div class="step" data-step="2"></div>
