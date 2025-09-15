@@ -4,121 +4,282 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hack Day Feedback Bot</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        body {
+        :root {
+            --primary-gradient: linear-gradient(135deg, #0c1220 0%, #1a202c 50%, #2d3748 100%);
+            --secondary-gradient: linear-gradient(135deg, #4a5568 0%, #1a202c 100%);
+            --accent-gradient: linear-gradient(135deg, #00d4aa 0%, #00a8cc 100%);
+            --glass-bg: rgba(12, 18, 32, 0.5);
+            --glass-border: rgba(0, 212, 170, 0.3);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.9);
+            --text-muted: rgba(255, 255, 255, 0.7);
+            --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.5);
+            --shadow-medium: 0 16px 64px rgba(0, 0, 0, 0.6);
+            --border-radius: 20px;
+            --border-radius-small: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --datatorque-accent: #00d4aa;
+        }
+
+        * {
             margin: 0;
             padding: 0;
-            font-family: system-ui, -apple-system, sans-serif;
-            background: linear-gradient(135deg, #7c3aed, #4f46e5);
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: var(--primary-gradient);
             min-height: 100vh;
-            color: white;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0, 212, 170, 0.1) 0%, transparent 60%),
+                radial-gradient(circle at 80% 20%, rgba(0, 168, 204, 0.08) 0%, transparent 60%),
+                radial-gradient(circle at 40% 40%, rgba(12, 18, 32, 0.4) 0%, transparent 70%),
+                radial-gradient(circle at 60% 60%, rgba(26, 32, 44, 0.3) 0%, transparent 50%);
+            z-index: -1;
+            animation: backgroundShift 25s ease-in-out infinite;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { transform: translateX(0) translateY(0); }
+            33% { transform: translateX(-20px) translateY(-10px); }
+            66% { transform: translateX(20px) translateY(10px); }
         }
 
         .app-container {
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
+            padding: 2rem 1rem;
+            position: relative;
+        }
+
+        .content {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .main-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            padding: 2.5rem;
+            box-shadow: var(--shadow-medium);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-container {
             text-align: center;
-            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            height: 60px;
+            width: auto;
+            filter: brightness(0) invert(1);
+            transition: var(--transition);
+        }
+
+        .logo:hover {
+            filter: brightness(0) invert(1) drop-shadow(0 0 10px var(--datatorque-accent));
+        }
+
+        .main-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+        }
+
+        .warning-text {
+            font-size: 0.875rem;
+            color: #ffffff;
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1rem 1.5rem;
+            background: rgba(12, 18, 32, 0.7);
+            border: 1px solid rgba(0, 212, 170, 0.3);
+            border-radius: var(--border-radius-small);
+            backdrop-filter: blur(15px);
+            transition: var(--transition);
+            position: relative;
+            font-weight: 500;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+        }
+
+        .warning-text.last-chance {
+            background: rgba(0, 212, 170, 0.15);
+            border: 2px solid var(--datatorque-accent);
+            color: #ffffff;
+            font-weight: 600;
+            animation: pulse 2s infinite;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 15px rgba(0, 212, 170, 0.3);
         }
 
         .chat-window {
             min-height: 200px;
-            max-width: 100%;
-            width: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.1rem;
+            font-size: 1.125rem;
             text-align: center;
-            margin-bottom: 2rem;
-            padding: 1rem;
+            margin-bottom: 2.5rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius-small);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .assistant-message {
-            animation: fadeIn 0.3s ease-in;
-            line-height: 1.6;
+            animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            line-height: 1.7;
+        }
+
+        .assistant-message p {
+            margin-bottom: 1rem;
+            font-weight: 400;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .assistant-message p:last-child {
+            margin-bottom: 0;
         }
 
         .loading-dots {
             display: flex;
-            gap: 5px;
+            gap: 8px;
             font-size: 2rem;
             justify-content: center;
+            align-items: center;
         }
 
         .loading-dots span {
-            animation: blink 1s infinite;
+            animation: bounce 1.4s infinite ease-in-out both;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
-        .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+        .loading-dots span:nth-child(1) { animation-delay: -0.32s; }
+        .loading-dots span:nth-child(2) { animation-delay: -0.16s; }
+        .loading-dots span:nth-child(3) { animation-delay: 0s; }
 
-        @keyframes blink {
-            0% { opacity: 0.2; }
-            50% { opacity: 1; }
-            100% { opacity: 0.2; }
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
         }
 
         .input-container {
-            max-width: 100%;
-            width: 100%;
-            margin-top: 1rem;
+            position: relative;
         }
 
         .feedback-input {
             width: 100%;
-            min-height: 120px;
-            max-height: 200px;
-            background: transparent;
-            border: none;
-            border-bottom: 2px solid white;
-            color: white;
+            min-height: 140px;
+            max-height: 240px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-primary);
             font-size: 1rem;
-            padding: 1rem;
+            font-family: inherit;
+            padding: 1.5rem;
             outline: none;
             resize: none;
-            line-height: 1.5;
-            overflow-y: auto;
+            line-height: 1.6;
+            border-radius: var(--border-radius-small);
+            backdrop-filter: blur(10px);
+            transition: var(--transition);
             box-sizing: border-box;
         }
 
         .feedback-input::placeholder {
-            color: rgba(255, 255, 255, 0.7);
+            color: var(--text-muted);
+            font-weight: 400;
         }
 
         .feedback-input:focus {
-            border-color: #facc15;
+            border-color: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1);
         }
 
         .submit-btn {
-            background: white;
-            color: #4f46e5;
+            background: var(--accent-gradient);
+            color: white;
             border: none;
-            padding: 0.8rem 2rem;
-            font-size: 1rem;
-            font-weight: bold;
+            padding: 1.2rem 3rem;
+            font-size: 1.1rem;
+            font-weight: 600;
             border-radius: 50px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 1rem;
+            transition: var(--transition);
+            margin: 1.5rem auto 0;
             width: 100%;
-            max-width: 200px;
+            max-width: 220px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-soft);
+            display: block;
+            letter-spacing: 0.5px;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
         }
 
         .submit-btn:hover {
-            transform: scale(1.05);
-            background: #facc15;
-            color: black;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
         }
 
         .submit-btn:disabled {
@@ -127,145 +288,191 @@
             transform: none;
         }
 
+
         .thankyou {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #bbf7d0;
-            animation: fadeIn 0.8s ease forwards;
-            padding: 1rem;
-        }
-
-        /* Balloons */
-        .balloon {
-            position: fixed;
-            bottom: -60px;
-            width: 30px;
-            height: 40px;
-            border-radius: 50%;
-            opacity: 0.9;
-            animation: float 4s ease-in forwards;
-            z-index: 9999;
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0) scale(1); opacity: 1; }
-            100% { transform: translateY(-120vh) scale(1.2); opacity: 0; }
-        }
-
-        .conversation {
-            display: none; /* Hide conversation history */
-        }
-
-        .warning-text {
-            font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.7);
+            font-size: 2rem;
+            font-weight: 700;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 2rem;
             text-align: center;
-            margin-bottom: 1rem;
-            padding: 0.5rem;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 5px;
-            max-width: 100%;
-            transition: all 0.3s ease;
-        }
-
-        .warning-text.last-chance {
-            background: rgba(255, 193, 7, 0.2);
-            border: 2px solid #ffc107;
-            color: #ffc107;
-            font-weight: bold;
-            font-size: 0.9rem;
-            animation: pulse 2s infinite;
+            line-height: 1.3;
         }
 
         .step-progress {
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-top: 1rem;
-            gap: 0.8rem;
+            margin-top: 2rem;
+            gap: 1rem;
         }
 
         .step {
-            width: 16px;
-            height: 16px;
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.4);
-            border: 2px solid rgba(255, 255, 255, 0.6);
-            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            transition: var(--transition);
+            position: relative;
         }
 
         .step.active {
-            background: #10b981;
-            border-color: #10b981;
-            transform: scale(1.3);
-            box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+            background: var(--accent-gradient);
+            border-color: transparent;
+            transform: scale(1.4);
+            box-shadow: 0 0 20px rgba(0, 212, 170, 0.4);
         }
 
         .step.completed {
-            background: #3b82f6;
-            border-color: #3b82f6;
-            box-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
+            background: var(--datatorque-accent);
+            border-color: var(--datatorque-accent);
+            box-shadow: 0 0 15px rgba(0, 212, 170, 0.3);
         }
 
         .step.last-chance {
-            background: #f59e0b;
-            border-color: #f59e0b;
+            background: #ff6b35;
+            border-color: #ff6b35;
             animation: pulse 2s infinite;
-            box-shadow: 0 0 12px rgba(245, 158, 11, 0.6);
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.4);
         }
 
         @keyframes pulse {
-            0% { transform: scale(1); }
+            0%, 100% { transform: scale(1); }
             50% { transform: scale(1.02); }
-            100% { transform: scale(1); }
+        }
+
+        .balloon {
+            position: fixed;
+            bottom: -60px;
+            width: 40px;
+            height: 50px;
+            border-radius: 50%;
+            opacity: 0.9;
+            animation: float 6s ease-in forwards;
+            z-index: 9999;
+            box-shadow: var(--shadow-soft);
+        }
+
+        @keyframes float {
+            0% { 
+                transform: translateY(0) scale(1) rotate(0deg); 
+                opacity: 1; 
+            }
+            100% { 
+                transform: translateY(-120vh) scale(1.5) rotate(360deg); 
+                opacity: 0; 
+            }
+        }
+
+        .bunny {
+            position: fixed;
+            bottom: -40px;
+            width: 30px;
+            height: 30px;
+            opacity: 0.9;
+            animation: bunnyJump 3s ease-in-out infinite;
+            z-index: 9999;
+            font-size: 30px;
+            pointer-events: none;
+        }
+
+        @keyframes bunnyJump {
+            0%, 100% { 
+                transform: translateY(0) translateX(0) scale(1); 
+                opacity: 0.9; 
+            }
+            25% { 
+                transform: translateY(-20px) translateX(15px) scale(1.1); 
+                opacity: 1; 
+            }
+            50% { 
+                transform: translateY(-40px) translateX(30px) scale(1); 
+                opacity: 0.9; 
+            }
+            75% { 
+                transform: translateY(-20px) translateX(45px) scale(1.1); 
+                opacity: 1; 
+            }
+        }
+
+        .conversation {
+            display: none;
         }
 
         /* Mobile optimizations */
         @media (max-width: 768px) {
             .app-container {
-                padding: 0.5rem;
+                padding: 1rem 0.5rem;
+            }
+            
+            .main-card {
+                padding: 2rem 1.5rem;
+                margin: 0 0.5rem;
+            }
+            
+            .logo {
+                height: 50px;
             }
             
             .warning-text {
-                font-size: 0.75rem;
-                padding: 0.4rem;
+                font-size: 0.8rem;
+                padding: 0.875rem 1rem;
+                margin-bottom: 1.5rem;
             }
             
             .step-progress {
-                margin-top: 0.8rem;
-                gap: 0.6rem;
+                margin-top: 1.5rem;
+                gap: 0.75rem;
             }
             
             .step {
-                width: 14px;
-                height: 14px;
+                width: 10px;
+                height: 10px;
             }
             
             .chat-window {
-                min-height: 150px;
+                min-height: 160px;
                 font-size: 1rem;
-                margin-bottom: 1rem;
+                margin-bottom: 2rem;
+                padding: 1.25rem;
             }
             
             .feedback-input {
-                min-height: 100px;
+                min-height: 120px;
                 font-size: 0.95rem;
+                padding: 1.25rem;
             }
             
             .submit-btn {
-                padding: 0.7rem 1.5rem;
-                font-size: 0.95rem;
+                padding: 1rem 2.5rem;
+                font-size: 1rem;
+                max-width: 200px;
             }
             
             .thankyou {
-                font-size: 1.2rem;
+                font-size: 1.5rem;
+                padding: 1.5rem;
             }
         }
 
         @media (max-width: 480px) {
+            .main-card {
+                padding: 1.5rem 1rem;
+                border-radius: 16px;
+            }
+            
+            .logo {
+                height: 40px;
+            }
+            
             .warning-text {
-                font-size: 0.7rem;
-                padding: 0.3rem;
+                font-size: 0.75rem;
+                padding: 0.75rem;
+                margin-bottom: 1.25rem;
             }
             
             .step-progress {
@@ -273,24 +480,53 @@
             }
             
             .step {
-                width: 12px;
-                height: 12px;
+                width: 8px;
+                height: 8px;
             }
             
             .chat-window {
-                min-height: 120px;
+                min-height: 140px;
                 font-size: 0.9rem;
+                margin-bottom: 1.5rem;
+                padding: 1rem;
             }
             
             .feedback-input {
-                min-height: 80px;
+                min-height: 100px;
                 font-size: 0.9rem;
-                padding: 0.8rem;
+                padding: 1rem;
             }
             
             .submit-btn {
-                padding: 0.6rem 1.2rem;
-                font-size: 0.9rem;
+                padding: 0.9rem 2rem;
+                font-size: 0.95rem;
+                max-width: 180px;
+            }
+            
+            .thankyou {
+                font-size: 1.25rem;
+                padding: 1rem;
+            }
+        }
+
+        /* Desktop optimizations */
+        @media (min-width: 1024px) {
+            .content {
+                max-width: 700px;
+            }
+            
+            .main-card {
+                padding: 3rem;
+            }
+            
+            .chat-window {
+                min-height: 220px;
+                font-size: 1.2rem;
+            }
+            
+            .feedback-input {
+                min-height: 160px;
+                font-size: 1.1rem;
             }
         }
     </style>
@@ -298,33 +534,42 @@
 <body>
     <div class="app-container" id="appContainer">
         <div class="content">
-            <div class="warning-text" id="warningText">
-                This is an experimental tool, do not reveal any sensitive data in this form
-            </div>
-            <div id="mainContent">
-                <div class="chat-window" id="chatWindow">
-                    <div class="assistant-message" id="assistantMessage">
-                        <p>Hi! Thanks for joining Hack Day!</p>
-                        <p>Tell us what you enjoyed, didn't like, any highlights, challenges, or suggestions.</p>
-                        <p>We'd especially like to know if you found it valuable as a learning experience or if you picked up any new skills.</p>
-                        <p>I might ask a few follow-up questions, but feel free to go off-script or skip anything you like!</p>
-                        <p>So how was hackday for you?</p>
-                    </div>
+            <div class="main-card">
+                <div class="logo-container">
+                    <img src="https://datatorque.com/assets/Uploads/Logo/logo.png" alt="DataTorque Logo" class="logo">
                 </div>
+                <div class="warning-text" id="warningText">
+                    <i class="fas fa-shield-alt" style="margin-right: 0.5rem;"></i>
+                    This is an experimental tool.<br>Please do not enter any sensitive data.
+                </div>
+                <div id="mainContent">
+                    <div class="chat-window" id="chatWindow">
+                        <div class="assistant-message" id="assistantMessage">
+                            <p>Thank you for joining Hack Day!</p>
+                            <p>Tell us what you enjoyed, didn't like, any highlights, challenges, or suggestions.</p>
+                            <p>We'd especially like to know if you found it valuable as a learning experience or if you picked up any new skills.</p>
+                            <p>I might ask a few follow-up questions, but feel free to go off-script or skip anything you like!</p>
+                            <p>So how was hackday for you?</p>
+                        </div>
+                    </div>
 
-                <div class="input-container">
-                    <textarea 
-                        class="feedback-input" 
-                        id="feedbackInput"
-                        placeholder="Type your response... use your own words!"
-                        rows="4"
-                    ></textarea>
-                    <button class="submit-btn" id="submitBtn">Send</button>
-                    <div class="step-progress" id="stepProgress">
-                        <div class="step active" data-step="1"></div>
-                        <div class="step" data-step="2"></div>
-                        <div class="step" data-step="3"></div>
-                        <div class="step" data-step="4"></div>
+                    <div class="input-container">
+                        <textarea 
+                            class="feedback-input" 
+                            id="feedbackInput"
+                            placeholder="Type your response... use your own words!"
+                            rows="4"
+                        ></textarea>
+                        <button class="submit-btn" id="submitBtn">
+                            <i class="fas fa-paper-plane" style="margin-right: 0.5rem;"></i>
+                            Send
+                        </button>
+                        <div class="step-progress" id="stepProgress">
+                            <div class="step active" data-step="1"></div>
+                            <div class="step" data-step="2"></div>
+                            <div class="step" data-step="3"></div>
+                            <div class="step" data-step="4"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -333,6 +578,9 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Configuration
+        const API_BASE_URL = "https://hackday-feedback-bot-backend.onrender.com";
+
         // Global variables
         let conversationHistory = [
             { role: "assistant", content: "Hi! Thank you for participating in Hack Day!" }
@@ -390,7 +638,7 @@
             setLoading(true);
             
             // Make API call
-            fetch("http://127.0.0.1:5000/chat", {
+            fetch(`${API_BASE_URL}/chat`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ messages: newConversation }),
@@ -439,16 +687,16 @@
             submitBtn.disabled = isLoading;
             
             if (isLoading) {
-                submitBtn.textContent = 'Sending...';
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right: 0.5rem;"></i>Sending...';
                 assistantMessage.innerHTML = `
                     <div class="loading-dots">
-                        <span>.</span>
-                        <span>.</span>
-                        <span>.</span>
+                        <span>●</span>
+                        <span>●</span>
+                        <span>●</span>
                     </div>
                 `;
             } else {
-                submitBtn.textContent = 'Send';
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane" style="margin-right: 0.5rem;"></i>Send';
             }
         }
 
@@ -461,7 +709,7 @@
         function updateWarningText() {
             const warningText = document.getElementById('warningText');
             if (botReplyCount >= 3) {
-                warningText.textContent = "This is your last opportunity to leave feedback, or you can refresh to start the form again. Please enter any final thoughts you have on Hack Day, whatever you need to say!";
+                warningText.textContent = "Please enter any final feedback now, survey will end after this screen.";
                 warningText.classList.add('last-chance');
             }
         }
@@ -497,7 +745,8 @@
             const mainContent = document.getElementById('mainContent');
             mainContent.innerHTML = `
                 <div class="thankyou">
-                    🎉 ${message}
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">🎉</div>
+                    <div>${message}</div>
                 </div>
             `;
             console.log('Thank you message displayed');
@@ -509,7 +758,7 @@
         function extractStructuredData() {
             console.log('Extracting structured data...');
             
-            fetch("http://127.0.0.1:5000/extract-structured-data", {
+            fetch(`${API_BASE_URL}/extract-structured-data`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ conversation: conversationHistory }),
@@ -531,21 +780,45 @@
         }
 
         function launchBalloons() {
+            // Launch balloons
             for (let i = 0; i < 8; i++) {
                 const balloon = document.createElement("div");
                 balloon.className = "balloon";
                 balloon.style.left = `${Math.random() * 90 + 5}%`;
-                balloon.style.background = randomColor();
-                balloon.style.animationDuration = `${3 + Math.random() * 2}s`;
-                balloon.style.transform = `scale(${0.7 + Math.random() * 0.6})`;
+                balloon.style.background = randomGradient();
+                balloon.style.animationDuration = `${4 + Math.random() * 3}s`;
+                balloon.style.animationDelay = `${Math.random() * 2}s`;
+                balloon.style.transform = `scale(${0.5 + Math.random() * 0.8})`;
+                balloon.style.borderRadius = `${50 + Math.random() * 20}%`;
                 document.body.appendChild(balloon);
-                setTimeout(() => balloon.remove(), 5000);
+                setTimeout(() => balloon.remove(), 7000);
+            }
+            
+            // Launch bottom bunnies
+            for (let i = 0; i < 8; i++) {
+                const bunny = document.createElement("div");
+                bunny.className = "bunny";
+                bunny.innerHTML = "🐰";
+                bunny.style.left = `${Math.random() * 90 + 5}%`;
+                bunny.style.animationDelay = `${Math.random() * 3}s`;
+                bunny.style.animationDuration = `${2 + Math.random() * 2}s`;
+                document.body.appendChild(bunny);
+                setTimeout(() => bunny.remove(), 10000);
             }
         }
 
-        function randomColor() {
-            const colors = ["#ff6b6b", "#feca57", "#54a0ff", "#5f27cd", "#1dd1a1"];
-            return colors[Math.floor(Math.random() * colors.length)];
+        function randomGradient() {
+            const gradients = [
+                "linear-gradient(135deg, #ff6b6b, #feca57)",
+                "linear-gradient(135deg, #54a0ff, #5f27cd)",
+                "linear-gradient(135deg, #1dd1a1, #10ac84)",
+                "linear-gradient(135deg, #ff9ff3, #f368e0)",
+                "linear-gradient(135deg, #feca57, #ff9ff3)",
+                "linear-gradient(135deg, #48dbfb, #0abde3)",
+                "linear-gradient(135deg, #ff6348, #ff4757)",
+                "linear-gradient(135deg, #2ed573, #7bed9f)"
+            ];
+            return gradients[Math.floor(Math.random() * gradients.length)];
         }
     </script>
 </body>
